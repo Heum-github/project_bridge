@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smhrd.bridge.mapper.UserMapper">
+
+	<!-- 회원가입 -->
+	<insert id="register"
+		parameterType="com.smhrd.bridge.entity.UserInfo">
+		insert into userinfo (user_id,
+		user_pw, user_address,
+		user_birthday, user_fav, user_name, user_nick, join_date, user_gender,
+		user_intro)
+		values
+		(#{user_id},
+		#{user_pw},
+		#{user_address},
+		#{user_birthday}, #{user_fav}, #{user_name},
+		#{user_nick}, NOW(), #{user_gender},
+		#{user_intro})
+	</insert>
+
+	<!-- 로그인 -->
+	<select id="login"
+		parameterType="com.smhrd.bridge.entity.UserInfo"
+		resultType="com.smhrd.bridge.entity.UserInfo">
+		select * from userinfo where user_id = #{user_id} and
+		user_pw = #{user_pw}
+	</select>
+	
+	<!-- 회원 정보 수정 -->
+	<update id="update"
+		parameterType="com.smhrd.bridge.entity.UserInfo">
+		update userinfo set user_id = #{user_id}, user_pw =
+		#{user_pw}, user_address = #{user_address},
+		user_birthday =
+		#{user_birthday}, user_name = #{user_name}, user_nick = #{user_nick}
+		where user_id = #{user_id}
+	</update>
+
+	<!-- 선택한 노래 저장 -->
+	<insert id="songList" parameterType="java.util.List">
+		insert into userlikelist (song_num, user_id, rating)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.song_num}, #{item.user_id}, #{item.rating})
+		</foreach>
+	</insert>
+
+	<!-- 노래 다 가져오기 -->
+	<select id="allSong"
+		resultType="com.smhrd.bridge.entity.SongList">
+		select * from songlist
+	</select>
+
+	<select id="getSavedSongs"
+		parameterType="com.smhrd.bridge.entity.UserInfo"
+		resultType="com.smhrd.bridge.entity.UserLikeList">
+		select * from userlikelist where user_id = #{user_id}
+	</select>
+
+	<!-- 검색 기능 -->
+	<select id="search"
+		resultType="com.smhrd.bridge.entity.SongList" parameterType="Map">
+		SELECT * FROM songlist
+		WHERE
+		<choose>
+			<when test="searchType == 'song'">
+				song_name LIKE CONCAT('%', #{searchInput}, '%')
+			</when>
+			<when test="searchType == 'singer'">
+				singer LIKE CONCAT('%', #{searchInput}, '%')
+			</when>
+		</choose>
+	</select>
+
+	<!-- 회원 탈퇴 기능 -->
+	<delete id="deleteUser">
+		delete from userinfo where user_id = #{user_id}
+	</delete>
+	
+	<!-- TOP30 출력 기능 -->
+	<select id="songRanking"
+		resultType="com.smhrd.bridge.entity.SongList">
+		select * from songlist
+		where
+		song_num = '83490' or song_num = '84392' or song_num = '83138' or song_num =
+		'42610' or song_num = '46009'
+		or song_num = '84073' or song_num = '14515' or song_num = '9308' or
+		song_num = '49818' or song_num = '48585'
+		or song_num = '46108' or song_num = '84443' or song_num = '76409' or
+		song_num = '48470' or song_num = '8122'
+		or song_num = '84176' or song_num = '15124' or song_num = '85210' or
+		song_num = '38028' or song_num = '34409'
+		or song_num = '13588' or song_num = '35138' or song_num = '83393' or
+		song_num = '91725' or song_num = '46213'
+		or song_num = '37765' or song_num = '54825' or song_num = '14980' or
+		song_num = '47835' or song_num = '35819'
+		or song_num = '35774';
+	</select>
+
+</mapper>

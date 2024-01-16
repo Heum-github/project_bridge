@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smhrd.bridge.mapper.UploadMapper">
+
+	<insert id="uploadMusic" parameterType="com.smhrd.bridge.entity.UserSong">
+		insert into usersong (user_id, user_singer, user_song_name, song_file, noise_cancel, created_at,
+		 tempo, wave, chroma_stft_mean, rmse_mean, spec_cent_mean, harmony_mean, mfcc_mean)
+		values (#{user_id}, #{user_singer}, #{user_song_name}, #{song_file}, #{noise_cancel}, now(),
+		 #{tempo}, #{wave}, #{chroma_stft_mean}, #{rmse_mean}, #{spec_cent_mean}, #{harmony_mean}, #{mfcc_mean});
+	</insert>
+	<select id="mypage" parameterType="com.smhrd.bridge.entity.UserInfo" resultType="com.smhrd.bridge.entity.UserSong">
+		select * from usersong where user_id = #{user_id};	
+	</select>
+</mapper>

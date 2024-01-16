@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smhrd.bridge.mapper.MatchingMapper">
+
+<select id="matchingPage" parameterType="com.smhrd.bridge.entity.UserInfo" resultType="com.smhrd.bridge.entity.UserInfo">
+	select * from userinfo;
+</select>
+<select id="matchingProfile" resultType="com.smhrd.bridge.entity.UserSong">
+	select * from usersong where user_id = #{user_id};
+</select>
+<select id="matchingRecommender" resultType="com.smhrd.bridge.entity.UserSong">
+	select * from usersong;
+</select>
+<!-- 코사인 유사도 실험 -->
+	<select id="allUser" resultType="java.util.Map">
+		select distinct user_id from
+		userlikelist where user_id != #{user_id};
+	</select>
+
+	<select id="cosainA"
+		resultType="com.smhrd.bridge.entity.UserLikeList">
+		select * from userlikelist where user_id = #{user_id};
+	</select>
+
+	<select id="cosainB"
+		resultType="com.smhrd.bridge.entity.UserLikeList">
+		SELECT
+		ROW_NUMBER() OVER () AS idx,
+		A.song_num,
+		B.user_id,
+		COALESCE(B.rating, NULL) AS rating
+		FROM
+		userlikelist A
+		LEFT JOIN
+		userlikelist B ON B.song_num = A.song_num
+		WHERE
+		A.user_id = #{user_id}
+		ORDER BY
+		A.song_num, B.user_id, COALESCE(B.rating, NULL);
+	</select>
+	
+	<select id = "getUserInfoById" parameterType="com.smhrd.bridge.entity.UserInfo">
+		select * from userinfo where user_id = #{user_id}
+	</select>
+	
+	<select id = "searchProfile" parameterType="com.smhrd.bridge.entity.UserInfo">
+		select * from userinfo where user_id = #{user} or user_fav = #{user};
+	</select>
+	
+	<!-- 거리 실험 -->
+   <select id="selectAllUser" resultType="com.smhrd.bridge.entity.UserInfo">
+      select * from userinfo where user_id != #{user_id};
+   </select>
+</mapper>

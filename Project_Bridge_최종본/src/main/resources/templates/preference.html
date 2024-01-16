@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Pet Sitting - Free Bootstrap 4 Template by Colorlib</title>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+	crossorigin="anonymous">
+<link
+	href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/animate.css">
+<link rel="stylesheet" href="css/owl.carousel.min.css">
+<link rel="stylesheet" href="css/owl.theme.default.min.css">
+<link rel="stylesheet" href="css/magnific-popup.css">
+<link rel="stylesheet" href="css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="css/jquery.timepicker.css">
+<link rel="stylesheet" href="css/flaticon.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body style = "font-family: 'Pretendard-Regular';">
+	<!-- Header -->
+	<div th:replace="/header :: header"></div>
+
+	<!-- END nav -->
+	<section class="hero-wrap hero-wrap-2" style="height: 160px;"
+		data-stellar-background-ratio="0.5">
+		<div class="overlay overlay-new"></div>
+		<div class="container">
+			<div class="row row2 no-gutters slider-text align-items-end">
+				<div class="col-md-9 ftco-animate pb-5" style="margin-top: 30px;">
+					<h1 class="mb-0 bread page-name">취향 분석</h1>
+				</div>
+				<div class="container-bar- ftco-animate fadeInUp ftco-animated">
+					<div class="bar-bar ftco-animate fadeInUp ftco-animated"></div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="ftco-section ftco-degree-bg" style="padding: 50px;">
+		<div class="container preference-container" style="padding: 0rem 6rem">
+			<div style="text-align: center;">
+				<h4 class="matching-text"
+					style="font-weight: 700; margin-bottom: 20px;">좋아하는 노래와 가수를
+					검색하거나 TOP100에서 선택하여</h4>
+				<h4 class="matching-text"
+					style="font-weight: 700; margin-bottom: 20px;">자신의 음악 취향을
+					분석해보세요</h4>
+				<br>
+			</div>
+			<div class="container">
+				<div class="sidebar-box ftco-animate"
+					style="border: 1px solid #74b9ff; border-radius: 20px; padding: 20px;">
+					<div class="categories">
+						<li><a href="preference"> 노래방 인기곡 TOP100 </a></li>
+						<li><a> 멜론 Chart TOP100 </a></li>
+						<li><a> TJ 최신곡 리스트 </a></li>
+					</div>
+				</div>
+				<p style = "text-align : center;"> 노래의 평점을 매기고 하단의 제출버튼을 눌려주세요. 평가를 많이 할 수록 정확한 취향 분석 결과가 나옵니다.</p>
+				<div class="sidebar-box" style="border-radius: 20px;">
+					<form id="searchForm" action="#" class="search-form">
+						<div class="form-group" id="searchbar">
+							<div style="display: flex;">
+								<select name="search" id="searchType"
+									style="border-radius: 10px; margin-right: 4px;">
+									<option value="song">노래</option>
+									<option value="singer">가수</option>
+								</select> <input type="text" class="form-control" id="searchInput"
+									placeholder="노래 및 가수 검색를 검색하세요"
+									style="margin-left: 2px; margin-right: 4px; border-radius: 10px; background-color: #f5f6f7 !important;">
+								<input type="button" class="btn btn-primary" style=" text-align : center;" value="검색">
+							</div>
+						</div>
+					</form>
+
+				</div>
+				<form th:action="@{/preference/submit}" method="post"
+					id="preferenceForm">
+					
+					<div id="existingSongsContainer"
+						style="overflow-y: scroll; background: #fff; height: 400px; margin-bottom: 15px; border: 1px solid #74b9ff">
+						<div th:each="song : ${songList}" class="song-container">
+							<h5 style="display: flex;">
+								<input type="checkbox" name="selectedSongs"
+									style="margin-bottom: 10px" th:value="${song.song_num}"
+									id="${'song-' + song.song_num}"> <label
+									th:for="${'song-' + song.song_num}"
+									th:text="${song.song_name + ' - ' + song.singer}"></label>
+								<div class="rate" style="display: none; padding-left: 10px;">
+									<th:block th:each="starNum : ${#numbers.sequence(5, 1)}">
+										<input type="radio"
+											th:id="${'rating' + starNum + '-' + song.song_num}"
+											th:name="${'rating-' + song.song_num}" th:value="${starNum}">
+										<label th:for="${'rating' + starNum + '-' + song.song_num}"
+											th:title="${starNum + '점'}"></label>
+									</th:block>
+								</div>
+							</h5>
+							<div class="star-rating space-x-4 mx-auto"
+								id="${'starRatingSection-' + song.song_num}"
+								style="display: none;">
+								<div th:each="starNum : ${#numbers.sequence(1, 5)}"
+									style="display: inline-block;">
+									<input type="radio"
+										th:id="${'5-stars-' + song.song_num + '-' + starNum}"
+										th:name="${'rating-' + song.song_num}" th:value="${starNum}"
+										th:checked="${ratings != null ? ratings[song.song_num - 1] == starNum : false}" />
+									<label th:for="${'5-stars-' + song.song_num + '-' + starNum}"
+										class="star pr-4">★</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 검색 결과 출력창 -->
+					<div id="searchResultsContainer"></div>
+					<button type="submit" class="btn btn-primary"
+						onclick="saveCheckboxState()" style="margin-left: 800px;">취향분석제출</button>
+				</form>
+
+				<!-- 페이징 -->
+				<nav aria-label="Page navigation example">
+					<div class="pagination d-flex justify-content-center">
+						<span class="page-item" th:if="${page > 1}"> <a
+							class="page-link" th:href="@{/preference(page=1)}">First</a>
+						</span> <span class="page-item" th:if="${page > 1}"> <a
+							class="page-link" th:href="@{/preference(page=${page - 1})}">Previous</a>
+						</span> <span
+							th:each="pageNumber : ${#numbers.sequence(((page - 1) / 10) * 10 + 1, ((page - 1) / 10 + 1) * 10)}"
+							th:if="${pageNumber <= totalPages}"> <a class="page-link"
+							th:href="@{/preference(page=${pageNumber})}"
+							th:text="${pageNumber}"></a>
+						</span> <span class="page-item" th:if="${page + 10 <= totalPages}">
+							<a class="page-link" th:href="@{/preference(page=${page + 10})}">Next</a>
+						</span> <span class="page-item" th:if="${page + 10 <= totalPages}">
+							<a class="page-link" th:href="@{/preference(page=${totalPages})}">Last</a>
+						</span>
+					</div>
+				</nav>
+
+
+			</div>
+	</section>
+	<!-- .section -->
+
+
+	<div th:replace="/footer :: footer"></div>
+	<!-- loader -->
+	<div id="ftco-loader" class="show fullscreen">
+		<svg class="circular" width="48px" height="48px">
+			<circle class="path-bg" cx="24" cy="24" r="22" fill="none"
+				stroke-width="4" stroke="#eeeeee" />
+			<circle class="path" cx="24" cy="24" r="22" fill="none"
+				stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+	<script th:inline="javascript">
+		var contextPath = /*[[@{/}]]*/'';
+	</script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery-migrate-3.0.1.min.js"></script>
+	<script src="js/popper.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.easing.1.3.js"></script>
+	<script src="js/jquery.waypoints.min.js"></script>
+	<script src="js/jquery.stellar.min.js"></script>
+	<script src="js/jquery.animateNumber.min.js"></script>
+	<script src="js/bootstrap-datepicker.js"></script>
+	<script src="js/jquery.timepicker.min.js"></script>
+	<script src="js/owl.carousel.min.js"></script>
+	<script src="js/jquery.magnific-popup.min.js"></script>
+	<script src="js/scrollax.min.js"></script>
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+	<script src="js/google-map.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/preference.js"></script>
+	<script src="https://kit.fontawesome.com/8fba072206.js"></script>
+	<!-- <script src="js/searchbar.js"></script> -->
+	<script src="js/move-div.js"></script>
+	<script src="js/navbar-move-div.js"></script>
+</body>
+</html>
