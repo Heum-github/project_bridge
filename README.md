@@ -8,7 +8,9 @@
 ### 팀 구성
 * 팀명 : 앙상블
 * 팀원 구성
-![팀원소개](https://github.com/Heum-github/project_bridge/assets/143698704/35648311-f258-4bf4-86e1-aa8b36356257)
+
+* <img src="![팀원소개](https://github.com/Heum-github/project_bridge/assets/143698704/35648311-f258-4bf4-86e1-aa8b36356257)
+"  width="700" height="370">
 
 ### 개발 환경
 - 사용언어 : `Python`, `Java`, `HTML`, `CSS`, `JavaScript`
